@@ -7,7 +7,9 @@
         xmlns:local="clr-namespace:Seo"
         mc:Ignorable="d"
         DataContext="{Binding MainViewModel,Source={StaticResource Locator}}"
-         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="MainWindow" Height="600" Width="900">
     <Grid Margin="20">
         <Grid.RowDefinitions>
