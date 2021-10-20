@@ -50,17 +50,6 @@ namespace Seo
 
         private void LoadStateChanged(object sender, CefSharp.LoadingStateChangedEventArgs e)
         {
-            if (!e.IsLoading)
-            {
-                CommonServiceLocator.ServiceLocator.Current.GetInstance<MainViewModel>().ControlVisibility = Visibility.Collapsed;
-            }
-            else
-            {
-                CommonServiceLocator.ServiceLocator.Current.GetInstance<MainViewModel>().ControlVisibility = Visibility.Visible;
-                //IsLoading = true;
-               
-                
-            }
 
         }
     }

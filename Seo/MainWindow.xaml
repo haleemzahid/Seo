@@ -11,43 +11,9 @@
         WindowState="Maximized"
         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="MainWindow" Height="600" Width="900">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <TextBox Text="{Binding LinkssSelectedData.WebsiteLink,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" TextWrapping="Wrap" Name="txtUrl"></TextBox>
-            <Button Command="{Binding command}" CommandParameter="Next" Grid.Column="2"> Next</Button>
-            <Button Command="{Binding command}" CommandParameter="Bad" Grid.Column="4"> Bad</Button>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="0.5*"/>
-            </Grid.ColumnDefinitions>
-        <cefSharp:ChromiumWebBrowser  Grid.Row="1" Margin="0 10 0 10" cefSharp:BorderThickness="1" cefSharp:BorderBrush="Blue"
-                                      FrameLoadEnd="end" FrameLoadStart="start"
-             Address="{Binding ElementName=txtUrl, Path=Text}" LoadingStateChanged="LoadStateChanged" >
-           
+    <Grid>
+        <ContentPresenter Content="{Binding CurrentView}">
             
-        </cefSharp:ChromiumWebBrowser>
-        
-
-        <hc:CircleProgressBar  Visibility="{Binding ControlVisibility,UpdateSourceTrigger=PropertyChanged}" IsIndeterminate="True" Grid.Row="1" Name="progressBar"  Margin="16,0,0,0"  Style="{StaticResource ProgressBarInfoCircle}"/>
-            <DataGrid Grid.Column="1">
-                <DataGrid.Columns>
-                    
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
-
+        </ContentPresenter>
     </Grid>
 </Window>

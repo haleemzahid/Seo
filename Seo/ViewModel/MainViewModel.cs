@@ -1,25 +1,82 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using CsvHelper;
 using CsvHelper.Configuration;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Seo.Model;
+using Seo.Views;
+using Seo.Views.UserControls;
 
 namespace Seo.ViewModel
 {
  public   class MainViewModel:ViewModelBase
     {
+
+
+
+        private UserControl _currentView;
+
+        public UserControl CurrentView
+        {
+            get { return _currentView; }
+            set { _currentView = value; }
+        }
+            private DashbordUC _dashbordUC;
+
+        public DashbordUC DashbordUC
+        {
+            get { return _dashbordUC; }
+            set { _dashbordUC = value; }
+        }
+
+        private Server _server;
+
+        public Server server
+        {
+            get { return _server; }
+            set { _server = value;RaisePropertyChanged("server"); }
+        }
+        string serverCon = @"DESKTOP-32GMQSN\SQLEXPRESS";
         public RelayCommand<string> command { get; set; }
         public MainViewModel()
         {
+            DashbordUC = new DashbordUC();
+            CurrentView = new UserControl();
+            CurrentView = DashbordUC;
+           // string str = @"Server=DESKTOP-32GMQSN\SQLEXPRESS;User Id=sa;Password=123456;";
+           // SqlConnection sqlConnection = new SqlConnection(str);
+           // //sqlConnection.Open();
+
+           // var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+           // SqlServerDailog s = new SqlServerDailog();
+           //// s.ShowDialog();
+           // var entry = config.AppSettings.Settings["connectionString"].Value;
+           // if (entry==""||entry==null)
+           // {
+
+
+           // }
+           // config.AppSettings.Settings["connectionString"].Value="asdas";
+          
+           // config.Save(ConfigurationSaveMode.Modified);
+
+
+
+
+
+
+
             WebDatasList = new ObservableCollection<WebData>();
             LinkssList = new ObservableCollection<Links>();
             WebDatasSelectedData = new WebData();
