@@ -20,7 +20,7 @@ namespace Seo.ViewModel
         public List<Project> ProjectList
         {
             get { return _projectsList; }
-            set { _projectsList = value; RaisePropertyChanged("ProjectsList"); }
+            set { _projectsList = value; RaisePropertyChanged("ProjectList"); }
         }  
         private Project _projectsSelectedData;
 
@@ -50,6 +50,13 @@ namespace Seo.ViewModel
                     win = new CreateNewProject(this);
                     win.ShowDialog();
 
+                    break;
+                case "Close":
+                    if(win!=null)
+                    win.Close();
+                    break;  
+                case "CloseSetting":
+                    CommonServiceLocator.ServiceLocator.Current.GetInstance<MainViewModel>().currentWindow.Close();
                     break;
                 case "SaveProject":
                     if(ProjectSelectedData.Name=="")

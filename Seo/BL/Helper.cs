@@ -1,14 +1,21 @@
-﻿using Seo.Model;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.Win32;
+using Seo.Model;
 using Seo.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
 namespace Seo.BL
 {
@@ -53,7 +60,7 @@ namespace Seo.BL
         internal static void DeleteTable(string name)
         {
             var con=GetSqlConnection();
-            var query = "Delete table" + name;
+            var query = "drop table " + name;
             ExecuteQuery(query,con);
         }
 
@@ -115,7 +122,7 @@ namespace Seo.BL
 
         public static bool ExecuteQuery(string query, SqlConnection con)
         {
-            
+           
             try
             {
 
@@ -165,7 +172,7 @@ namespace Seo.BL
 
         public static void CreateDB()
         {
-            var con = GetSqlConnection();
+            var con = GetSqlConnection(false);
             string query = "create database MasterDB";
             ExecuteQuery(query,con);
             CreateTable("tblMaster");
@@ -222,8 +229,10 @@ namespace Seo.BL
                 List<Links> l = new List<Links>();
             try
             {
-                string query = "SELECT * FROM "+dbName;
-                using (var command = new SqlCommand(query, GetSqlConnection()))
+                string query = "SELECT * FROM "+dbName+" where URLStatus!='Bad'";
+                var con = GetSqlConnection();
+                con.Open();
+                using (var command = new SqlCommand(query, con))
                 {
                     using (SqlDataReader result = command.ExecuteReader())
                     {
@@ -244,6 +253,45 @@ namespace Seo.BL
                     return l;
 
         }
+        public static string GetFilePath()
+        {
+
+            OpenFileDialog dialog = new OpenFileDialog();
+
+            dialog.Filter = "Comma Delimited|*.csv";
+
+            if (dialog.ShowDialog() !=System.Windows.Forms.DialogResult.OK)
+            {
+                return null;
+
+            }
+            return dialog.FileName;
+
+        }
+        public static List<Links> GetListOfLinksFromCSVFile(string fileName)
+        {
+            List<Links> l = new List<Links>();
+            CsvConfiguration csvcon = new CsvConfiguration(CultureInfo.CurrentCulture);
+            csvcon.MissingFieldFound = null;
+            using (var reader = new StreamReader(fileName))
+            using (CsvReader csv = new CsvReader(reader, csvcon))
+            {
+                int a = 0;
+                while (csv.Read())
+                {
+                    if (a != 0)
+                        l.Add(new Links() { SourceTitle = csv[0], AnchorURL = csv[1], AnchorText = csv[2], SourceURL = csv[3], URLStatus = (csv[4]), FinalURL = (csv[5]), Catogery= (csv[6]) });
+                    a = 1;
+
+                    //var s = Date.Now;csv[4]
+                    //var a =csv.GetRecords<Prayer>();
+                }
+
+
+            }
+            return l;
+        }
+
         public  static void UpdateStatus(Links l)
         {
             var tables = GetTables();

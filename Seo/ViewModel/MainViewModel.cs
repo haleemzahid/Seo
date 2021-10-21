@@ -1,12 +1,14 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Seo.BL;
+using Seo.Views.Dialogs;
 using Seo.Views.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Seo.ViewModel
@@ -40,13 +42,15 @@ namespace Seo.ViewModel
             CurrentView = new UserControl();
             CurrentView = DashbordUC;
         }
-
+        public Window currentWindow;
         private void PerformAction(string obj)
         {
             switch (obj)
             {
                 case "Setting":
-                    CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().PerformAction(obj);
+                    currentWindow = new Window();
+                    currentWindow = new SettingDialog();
+                    currentWindow.ShowDialog();
                     break;
 
 
@@ -54,7 +58,17 @@ namespace Seo.ViewModel
                     CurrentView = DashbordUC;
                     break;
 
+                case "Import":
+                    var path = Helper.GetFilePath();
+                    if(path!=null&& path != "")
+                    {
 
+                    var list = Helper.GetListOfLinksFromCSVFile(path);
+                    var queries = Helper.GetLinkInsertQuery(list,"tblMaster");
+                    Helper.ExecuteQuery(queries,Helper.GetSqlConnection());
+                    Helper.RefreshData();
+                    }
+                    break;
 
                 default:
                     break;
