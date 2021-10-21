@@ -136,13 +136,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BL\BusinessLogic.cs" />
+    <Compile Include="BL\Helper.cs" />
     <Compile Include="Model\Links.cs" />
     <Compile Include="Model\Server.cs" />
     <Compile Include="Model\WebData.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\SettingViewModel.cs" />
+    <Compile Include="ViewModel\SqlServerViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="Views\SqlServerDailog.xaml.cs">
+    <Compile Include="Views\Dialogs\SqlServerDailog.xaml.cs">
       <DependentUpon>SqlServerDailog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserControls\DashbordUC.xaml.cs">
@@ -156,15 +158,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BL\DBAccess.cs" />
-    <Compile Include="BL\DBCreator.cs" />
-    <Compile Include="BL\Font.cs" />
-    <Compile Include="BL\FontHelper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\SqlServerDailog.xaml">
+    <Page Include="Views\Dialogs\SqlServerDailog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

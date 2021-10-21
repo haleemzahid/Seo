@@ -20,7 +20,6 @@
             </ResourceDictionary.MergedDictionaries>
 
             <vm:ViewModelLocator x:Key="Locator"  d:IsDataSource="True"/>
-            <SolidColorBrush x:Key="MainColor" Color="#000066"/>
             <SolidColorBrush x:Key="MainColor" Color="#008ae6"/>
             
 

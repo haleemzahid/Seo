@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Seo.Views"
-        xmlns:m="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:m="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
-        DataContext="{Binding MainViewModel,Source={StaticResource Locator}}"
+       
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
        
@@ -40,15 +40,15 @@
             </StackPanel>
         </Grid>
 
-        <Button FontSize="16" Grid.Row="2" Width="120"  HorizontalAlignment="Right" Margin="0 5 40 5">
+        <Button Command="{Binding command}" CommandParameter="Authenticate" FontSize="16" Grid.Row="2" Width="120"  HorizontalAlignment="Right" Margin="0 5 40 5">
             <Button.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="80"/>
                     </Grid.ColumnDefinitions>
-                    <m:PackIcon Kind="Login" Width="25" Height="25"/>
-                    <Label Foreground="White" Content="Connect" Grid.Column="1" FontSize="14"></Label>
+                    <m:PackIcon Kind="Login" Width="20" Margin="0" Height="20" VerticalAlignment="Center"/>
+                    <Label Padding="0" VerticalAlignment="Center" Margin="0" Foreground="White" Content="Connect" Grid.Column="1" FontSize="14"></Label>
                 </Grid>
             </Button.Content>
         </Button>
@@ -59,10 +59,14 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="80"/>
                     </Grid.ColumnDefinitions>
-                    <m:PackIcon Kind="Multiply" Width="25" Height="25"/>
+                    <m:PackIcon Kind="Multiply" Width="20" Height="20"/>
                     <Label Foreground="White" Content="Cancel" Grid.Column="1" FontSize="14"></Label>
                 </Grid>
             </Button.Content>
         </Button>
+        <Grid Grid.RowSpan="3" Opacity="0.4" Background="#DCDCDC" Visibility="{Binding visibility,UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2">
+
+        </Grid>
+      
     </Grid>
 </Window>

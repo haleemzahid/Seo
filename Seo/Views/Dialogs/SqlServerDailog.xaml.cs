@@ -19,9 +19,10 @@ namespace Seo.Views
     /// </summary>
     public partial class SqlServerDailog : Window
     {
-        public SqlServerDailog()
+        public SqlServerDailog(ViewModel.MainViewModel mainViewModel)
         {
             InitializeComponent();
+            this.DataContext = mainViewModel;
         }
     }
 }
