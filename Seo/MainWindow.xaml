@@ -12,6 +12,9 @@
         WindowState="Maximized"
         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="MainWindow" Height="600" Width="900">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5"/>
+    </WindowChrome.WindowChrome>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -36,7 +39,7 @@
             <Button Command="{Binding command}" CommandParameter="Setting" ToolTip="Setting" Style="{StaticResource MaterialDesignFlatAccentButton}"  Grid.Column="3" Padding="0" Margin="0" Width="30" Height="30">
                 <materialDesign:PackIcon Kind="Settings" />
             </Button>
-            <Button Command="{Binding command,UpdateSourceTrigger=PropertyChanged}" CommandParameter="Setting" ToolTip="Import" Style="{StaticResource MaterialDesignFlatAccentButton}"  Grid.Column="4" Padding="0" Margin="0" Width="30" Height="30">
+            <Button Command="{Binding command,UpdateSourceTrigger=PropertyChanged}" CommandParameter="Import" ToolTip="Import" Style="{StaticResource MaterialDesignFlatAccentButton}"  Grid.Column="4" Padding="0" Margin="0" Width="30" Height="30">
                 <materialDesign:PackIcon Kind="InboxArrowDown" />
             </Button>
             <Button Click="Close"  Style="{StaticResource MaterialDesignFlatAccentButton}" Grid.Column="10" Padding="0" Margin="0" Width="30" Height="30">

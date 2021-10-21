@@ -40,7 +40,7 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Label Content="Current Link" Foreground="Black" VerticalContentAlignment="Center" FontSize="16"/>
-            <TextBox Grid.Column="1" Margin="16 0 0 0" Text="{Binding LinkssSelectedData.FinalURL,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" TextWrapping="Wrap" Name="txtUrl"></TextBox>
+            <TextBox Grid.Column="1" Margin="16 0 0 0" Text="{Binding LinkssSelectedData.SourceURL,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" TextWrapping="Wrap" Name="txtUrl"></TextBox>
             <Button  x:Name="btn" Command="{Binding command}" CommandParameter="Next" Grid.Column="3">Next</Button>
             <Button Command="{Binding command}" CommandParameter="Bad" Grid.Column="5">Bad</Button>
         </Grid>

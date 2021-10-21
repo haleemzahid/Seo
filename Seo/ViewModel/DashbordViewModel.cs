@@ -41,7 +41,7 @@ namespace Seo.ViewModel
         {
             command = new RelayCommand<string>(PerformAction);
             server = new Server();
-
+          
             ProjectSelectedData = new Project();
             ProjectList = new List<Project>();
             currentWindow = new SqlServerDailog(this);
@@ -88,11 +88,29 @@ namespace Seo.ViewModel
         public Project ProjectSelectedData
         {
             get { return _projectsSelectedData; }
-            set { _projectsSelectedData = value;
-                if(value.Name!=""&&value!=null&& value.Name != null)
-                    LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name));
-                RaisePropertyChanged("ProjectSelectedData"); }
+            set
+            {
+                _projectsSelectedData = value;
+                RefreshData(value);
+                value = new Project();
+                RaisePropertyChanged("ProjectSelectedData");
+            }
         }
+
+        private void RefreshData(Project value)
+        {
+            if (value != null)
+            {
+
+                if (LinkssList == null)
+                    LinkssList = new ObservableCollection<Links>();
+                if (value.Name != "" && value != null && value.Name != null)
+                    LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name));
+                if (LinkssList.Count > 0)
+                    LinkssSelectedData = LinkssList[0];
+            }
+        }
+
         private SettingDialog  _settingDialog;
 
         public SettingDialog SettingDialog
