@@ -12,22 +12,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Seo.Views
+namespace Seo.Views.Dialogs
 {
     /// <summary>
-    /// Interaction logic for SqlServerDailog.xaml
+    /// Interaction logic for CreateNewProject.xaml
     /// </summary>
-    public partial class SqlServerDailog : Window
+    public partial class CreateNewProject : Window
     {
-        public SqlServerDailog(ViewModel.DashbordViewModel mainViewModel)
+        public CreateNewProject(ViewModel.SettingViewModel settingViewModel)
         {
             InitializeComponent();
-            this.DataContext = mainViewModel;
+            this.DataContext = settingViewModel;
         }
 
         private void Close(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            this.Close(); 
         }
     }
 }

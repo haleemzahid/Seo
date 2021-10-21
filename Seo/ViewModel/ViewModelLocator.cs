@@ -47,6 +47,8 @@ namespace Seo.ViewModel
 
 
 
+            SimpleIoc.Default.Register<DashbordViewModel>();
+            SimpleIoc.Default.Register<SettingViewModel>();
             SimpleIoc.Default.Register<MainViewModel>();
 
         }
@@ -57,14 +59,29 @@ namespace Seo.ViewModel
 
 
 
-        public MainViewModel MainViewModel
+        public DashbordViewModel dashbordViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<DashbordViewModel>();
+            }
+        }
+        public SettingViewModel settingViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SettingViewModel>();
+            }
+        }
+
+        public MainViewModel mainViewModel
         {
             get
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
-        } 
-        
+        }
+
     }
 }
 

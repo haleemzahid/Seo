@@ -2,17 +2,54 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Seo"
         mc:Ignorable="d"
-        DataContext="{Binding MainViewModel,Source={StaticResource Locator}}"
+        DataContext="{Binding mainViewModel,Source={StaticResource Locator}}"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="MainWindow" Height="600" Width="900">
     <Grid>
-        <ContentPresenter Content="{Binding CurrentView}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="0"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Command="{Binding command}" CommandParameter="Setting" ToolTip="Setting" Style="{StaticResource MaterialDesignFlatAccentButton}"  Grid.Column="3" Padding="0" Margin="0" Width="30" Height="30">
+                <materialDesign:PackIcon Kind="Settings" />
+            </Button>
+            <Button Command="{Binding command,UpdateSourceTrigger=PropertyChanged}" CommandParameter="Setting" ToolTip="Import" Style="{StaticResource MaterialDesignFlatAccentButton}"  Grid.Column="4" Padding="0" Margin="0" Width="30" Height="30">
+                <materialDesign:PackIcon Kind="InboxArrowDown" />
+            </Button>
+            <Button Click="Close"  Style="{StaticResource MaterialDesignFlatAccentButton}" Grid.Column="10" Padding="0" Margin="0" Width="30" Height="30">
+                <materialDesign:PackIcon Kind="WindowClose" />
+            </Button>
+            <Button Click="Maximize" Style="{StaticResource MaterialDesignFlatAccentButton}" Grid.Column="9" Padding="0" Margin="0" Width="30" Height="30">
+                <materialDesign:PackIcon Kind="WindowMaximize" />
+            </Button>
+            <Button Click="Minimize" Style="{StaticResource MaterialDesignFlatAccentButton}" Grid.Column="8" Padding="0" Margin="0" Width="30" Height="30">
+                <materialDesign:PackIcon Kind="WindowMinimize" />
+            </Button>
+        </Grid>
+        <ContentPresenter Grid.Row="1" Content="{Binding CurrentView}">
             
         </ContentPresenter>
     </Grid>

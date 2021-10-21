@@ -16,5 +16,6 @@ namespace Seo.Model
         public string URLStatus { get; set; }
         public string FinalURL { get; set; }
         public string Catogery { get; set; }
+        public Guid Guid { get; set; } = new Guid();
     }
 }

@@ -1,5 +1,4 @@
-﻿using Seo.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,48 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Seo
+namespace Seo.Views.Dialogs
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for SettingDialog.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class SettingDialog : Window
     {
-       // public bool IsLoading { get; set; } = false;
-        public MainWindow()
+        public SettingDialog()
         {
             InitializeComponent();
-
-           
-            
-
         }
-
-        private void AddressChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
-
-        private void start(object sender, CefSharp.FrameLoadStartEventArgs e)
-        {
-           
-        }
-
-        private void end(object sender, CefSharp.FrameLoadEndEventArgs e)
-        {
-
-        }
-
-       
-
-        private void LoadStateChanged(object sender, CefSharp.LoadingStateChangedEventArgs e)
-        {
-
-        }
-
         private void Minimize(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
@@ -71,7 +41,7 @@ namespace Seo
 
         private void Close(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            this.Close();
 
         }
     }

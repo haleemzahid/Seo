@@ -31,11 +31,11 @@ namespace Seo.Views.UserControls
 
             if (!e.IsLoading)
             {
-                CommonServiceLocator.ServiceLocator.Current.GetInstance<MainViewModel>().ControlVisibility = Visibility.Collapsed;
+                CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().ControlVisibility = Visibility.Collapsed;
             }
             else
             {
-                CommonServiceLocator.ServiceLocator.Current.GetInstance<MainViewModel>().ControlVisibility = Visibility.Visible;
+                CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().ControlVisibility = Visibility.Visible;
                 //IsLoading = true;
 
 
