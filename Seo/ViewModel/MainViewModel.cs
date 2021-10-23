@@ -67,6 +67,7 @@ namespace Seo.ViewModel
 
                     var queries = Helper.GetLinkInsertQuery(list,"tblMaster");
                     Helper.ExecuteQuery(queries,Helper.GetSqlConnection());
+                        
                     Helper.RefreshData();
                     }
                     break;

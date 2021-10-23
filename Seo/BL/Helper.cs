@@ -255,6 +255,7 @@ namespace Seo.BL
                     if(tableName!="tblMaster")
                         
                         CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().ProjectList.Add(new Project() { Name=tableName});
+                        CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().RaisePropertyChanged("ProjectList");
                 }
             }
             catch (Exception ex)
@@ -401,13 +402,21 @@ namespace Seo.BL
                     if (reader.RowCount > 0)
                     {
                         var dashv = CommonServiceLocator.ServiceLocator.Current.GetInstance<SettingViewModel>();
+                        CreateNewProject c = new CreateNewProject(dashv);
+                        catName = dashv.ProjectSelectedData.Name="";
+                        dashv.win = new Window();
+                        dashv.win = c;
+                      c.btnSave.CommandParameter = "Close";
                         dashv.HintText = "Enter category name";
-                        dashv.PerformAction("AddNew");
-
-                        (dashv.win as CreateNewProject).btnSave.CommandParameter = "Close";
-                     
+                        c.ShowDialog();
                         catName = dashv.ProjectSelectedData.Name;
                         dashv.HintText = "Enter project name";
+                        if (catName == "")
+                            catName = "Default";
+                        
+
+
+                     
                     }
                     while (reader.Read())
                     {
