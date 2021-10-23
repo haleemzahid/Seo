@@ -64,6 +64,7 @@ namespace Seo.ViewModel
                     {
 
                     var list = Helper.GetListOfLinksFromCSVFile(path);
+
                     var queries = Helper.GetLinkInsertQuery(list,"tblMaster");
                     Helper.ExecuteQuery(queries,Helper.GetSqlConnection());
                     Helper.RefreshData();

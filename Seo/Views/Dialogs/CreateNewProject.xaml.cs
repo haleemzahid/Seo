@@ -29,5 +29,10 @@ namespace Seo.Views.Dialogs
         {
             this.Close(); 
         }
+
+        private void drag(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
     }
 }

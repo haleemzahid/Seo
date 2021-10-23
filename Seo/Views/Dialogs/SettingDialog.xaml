@@ -10,9 +10,12 @@
     Title="SettingDialog"
     Width="500"
     Height="400"
+       BorderBrush="{Binding ElementName=btnClose, Path=Background}"
+        BorderThickness="1"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
+  
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5"/>
     </WindowChrome.WindowChrome>
@@ -21,7 +24,7 @@
             <RowDefinition Height="30" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid>
+        <Grid MouseDown="Down">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60" />
@@ -127,7 +130,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="0.5*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="2" Command="{Binding command}" CommandParameter="CloseSetting">Close</Button>
+                <Button Grid.Column="2" Name="btnClose" Command="{Binding command}" CommandParameter="CloseSetting">Close</Button>
             </Grid>
         </Grid>
     </Grid>

@@ -28,6 +28,12 @@ namespace Seo.Views
         private void Close(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+            
+        }
+
+        private void Drag(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }

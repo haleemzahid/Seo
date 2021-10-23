@@ -44,5 +44,11 @@ namespace Seo.Views.Dialogs
             this.Close();
 
         }
+        private void Down(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+
     }
 }

@@ -41,5 +41,13 @@ namespace Seo.Views.UserControls
 
             }
         }
+
+        private void Changes(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().LinkssSelectedData.SourceURL = e.NewValue.ToString();
+
+
+            txtUrl.Text= e.NewValue.ToString();
+        }
     }
 }

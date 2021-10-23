@@ -4,8 +4,10 @@ using ExcelDataReader;
 using Microsoft.Win32;
 using Seo.Model;
 using Seo.ViewModel;
+using Seo.Views.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -86,6 +88,7 @@ namespace Seo.BL
 
         public static List<string> GetLinkInsertQuery(List<Links> _list,string tableName)
         {
+
             List<string> lStrin = new List<string>();
             try
             {
@@ -134,9 +137,15 @@ namespace Seo.BL
         {
             if (l == null)
                 l = new Links();
-            return "update "+tableName+" set URLStatus='" + l.URLStatus + "' where CONVERT(NVARCHAR(MAX), Guid)='" + l.Guidstr+"';";
+            var a = l.SourceURL.Substring(0, 18);
+            return "update "+tableName+" set URLStatus='" + l.URLStatus + "' where SourceURL LIKE '%" + l.SourceURL.Substring(0,25)+"%';";
         }
-
+        public static string UpdateFinalURLQuery(Links l, string tableName)
+        {
+            if (l == null)
+                l = new Links();
+            return "update " + tableName + " set FinalURL='" + l.SourceURL + "' where CONVERT(NVARCHAR(MAX), Guid)='" + l.Guidstr + "';";
+        }
         #endregion
 
 
@@ -180,6 +189,7 @@ namespace Seo.BL
             {
                 MessageBox.Show(ex.Message.ToString());
 
+            return false;
             }
             return true;
 
@@ -240,7 +250,12 @@ namespace Seo.BL
            var con = GetSqlConnection();
             string tableQuery = "Create table "+tableName+ " (Id INTEGER Identity(1,1) PRIMARY KEY,Guid TEXT, SourceTitle TEXT,AnchorURL TEXT,AnchorText TEXT,SourceURL TEXT,URLStatus NVARCHAR(50),FinalURL TEXT,Category NVARCHAR(50))";
 
-            ExecuteQuery(tableQuery, con);
+            if(ExecuteQuery(tableQuery, con))
+                {
+                    if(tableName!="tblMaster")
+                        
+                        CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().ProjectList.Add(new Project() { Name=tableName});
+                }
             }
             catch (Exception ex)
             {
@@ -320,6 +335,9 @@ namespace Seo.BL
 
 }
 
+
+   
+
         public static List<Links> GetLinksFromDB(string dbName)
         {
                 List<Links> l = new List<Links>();
@@ -351,7 +369,7 @@ namespace Seo.BL
                     return l;
 
         }
-        public static List<Project> projects = GetTables();
+        public static List<Project> projects = new List<Project>();
         public static string GetFilePath()
         {
 
@@ -376,16 +394,29 @@ namespace Seo.BL
             List<Links> listB = new List<Links>();
             using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
             {
+                string catName = "";
                 int a = 0;
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
-                    
+                    if (reader.RowCount > 0)
+                    {
+                        var dashv = CommonServiceLocator.ServiceLocator.Current.GetInstance<SettingViewModel>();
+                        dashv.HintText = "Enter category name";
+                        dashv.PerformAction("AddNew");
+
+                        (dashv.win as CreateNewProject).btnSave.CommandParameter = "Close";
+                     
+                        catName = dashv.ProjectSelectedData.Name;
+                        dashv.HintText = "Enter project name";
+                    }
                     while (reader.Read())
                     {
                         if (a != 0)
                             
                        
                         {
+
+
 
                         var l = new Links();
                         if(!reader.IsDBNull(3))
@@ -396,6 +427,7 @@ namespace Seo.BL
                         l.SourceURL = reader[0].ToString();
                         if(!reader.IsDBNull(1))
                         l.SourceTitle = reader[1].ToString();
+                            l.Catogery = catName;
                         listB.Add(l);
                         }
                         a++;
@@ -466,7 +498,7 @@ namespace Seo.BL
          
         }
 
-        public  static void UpdateStatus(Links l)
+        public  static void UpdateStatus(Links l,bool IsFinalUrl=false)
         {
             try {
                 l.URLStatus = "Bad";
@@ -474,8 +506,18 @@ namespace Seo.BL
                 tables.Add(new Project() { Name="tblMaster"});
             foreach (var item in tables)
             {
+                    string query = "";
                 var con= GetSqlConnection();
-                var query = GetLinkupdateQuery(l,item.Name);
+                    if(!IsFinalUrl)
+                    {
+
+                query = GetLinkupdateQuery(l,item.Name);
+                    }
+                    else
+                    {
+                query = UpdateFinalURLQuery(l,item.Name);
+
+                    }
                 ExecuteQuery(query,con);
 
 
@@ -488,7 +530,7 @@ namespace Seo.BL
 
             }
         }
-        public static List<Project> GetTables()
+        public static ObservableCollection<Project> GetTables()
         {
             try
             {
@@ -502,14 +544,14 @@ namespace Seo.BL
                         ProjectNames.Add(new Project() { Name = (row[2].ToString()) });
                     }
                     connection.Close();
-                    return ProjectNames.Where(x => x.Name != "tblMaster").ToList();
+                    return new ObservableCollection<Project>(ProjectNames.Where(x => x.Name != "tblMaster").ToList());
                 }
             }
               
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString());
-                return new List<Project>();
+                return new ObservableCollection<Project>();
             }
 }
 
@@ -535,9 +577,8 @@ namespace Seo.BL
         }
         public static void RefreshData()
         {
-            projects = GetTables();
+            projects = GetTables().ToList();
             CommonServiceLocator.ServiceLocator.Current.GetInstance<SettingViewModel>().ProjectList = projects;
-            CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().ProjectList= projects;
                    }
 
     }

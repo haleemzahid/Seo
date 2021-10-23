@@ -16,6 +16,13 @@ namespace Seo.ViewModel
     {
         public RelayCommand<string> command { get; set; }
         private List<Project> _projectsList;
+        private string _HintText= "Enter project name";
+
+        public string HintText 
+        {
+            get { return _HintText; }
+            set { _HintText = value; }
+        }
 
         public List<Project> ProjectList
         {
@@ -36,7 +43,7 @@ namespace Seo.ViewModel
             command = new RelayCommand<string>(PerformAction);
         }
         public Window win;
-        private void PerformAction(string obj)
+        public void PerformAction(string obj)
         {
             switch (obj)
             {

@@ -27,7 +27,48 @@ namespace Seo.ViewModel
 
 
 
-      
+        private Filter _filterData;
+
+        public Filter FilterData
+        {
+            get { return _filterData; }
+            set
+            {
+                _filterData = value;
+                GetFilteredList(value);
+                RaisePropertyChanged("FilterData");
+            }
+        }
+
+        private void GetFilteredList(Filter filterData)
+        {
+            if (filterData.AnchorText == null)
+                filterData.AnchorText = "";
+            if (filterData.Category == null)
+                filterData.Category = "";
+            if(filterData.AnchorText==""&&filterData.Category!="")
+            LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name).Where(x=>x.Catogery == filterData.Category).ToList());
+           else if(filterData.AnchorText!=""&&filterData.Category=="")
+            LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name).Where(x=>x.AnchorText== filterData.AnchorText).ToList());
+           else if(filterData.AnchorText!=""&&filterData.Category!="")
+            LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name).Where(x => x.AnchorText == filterData.AnchorText && x.Catogery == filterData.Category).ToList());
+            if (LinkssList.Count <= 0)
+                LinkssSelectedData = new Links();
+            else
+            {
+                LinkIndex = 0;
+                PerformAction("Next");
+            }
+        }
+
+        private ObservableCollection<Filter> _filterList;
+
+        public ObservableCollection<Filter> FilterList
+        {
+            get { return _filterList; }
+            set { _filterList = value;RaisePropertyChanged("FilterList"); }
+        }
+
         private Server _server;
 
         public Server server
@@ -41,9 +82,8 @@ namespace Seo.ViewModel
         {
             command = new RelayCommand<string>(PerformAction);
             server = new Server();
-          
             ProjectSelectedData = new Project();
-            ProjectList = new List<Project>();
+            ProjectList = new ObservableCollection<Project>();
             currentWindow = new SqlServerDailog(this);
             if (!Helper.CheckForConnectionString())
                 currentWindow.ShowDialog();
@@ -51,34 +91,46 @@ namespace Seo.ViewModel
             LinkssList = new ObservableCollection<Links>();
            
             LinkssSelectedData = new Links();
+            FilterList = new ObservableCollection<Filter>();
+           
+            FilterData = new Filter();
             ProjectList = Helper.GetTables();
             if (ProjectList.Count > 0)
             {
+                
+                ProjectSelectedData = ProjectList.First();
 
-            ProjectSelectedData = ProjectList.First();
-          
             }
-       
+
         }
-          
-            
+
+        private void GetFilter()
+        {
+            var li = LinkssList.Select(x => new { x.Catogery, x.AnchorText }).Distinct().ToList();
+            foreach (var item in li)
+            {
+                FilterList.Add(new Filter() {AnchorText=item.AnchorText,Category=item.Catogery });
+            }
+                      
+        }
 
 
-            
-
-
-       
-
-            
-            
 
 
 
 
-         
-        private List<Project> _projectsList;
 
-        public List<Project> ProjectList
+
+
+
+
+
+
+
+
+        private ObservableCollection<Project> _projectsList;
+
+        public ObservableCollection<Project> ProjectList
         {
             get { return _projectsList; }
             set { _projectsList = value; RaisePropertyChanged("ProjectList"); }
@@ -105,9 +157,18 @@ namespace Seo.ViewModel
                 if (LinkssList == null)
                     LinkssList = new ObservableCollection<Links>();
                 if (value.Name != "" && value != null && value.Name != null)
+                {
+
                     LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name));
+                    LinkIndex = 0;
+                }
                 if (LinkssList.Count > 0)
+                {
+                    
+                    GetFilter();
                     LinkssSelectedData = LinkssList[0];
+                
+                }
             }
         }
 
@@ -174,11 +235,17 @@ namespace Seo.ViewModel
                     case "PageLoading":
                         break;
                     case "Next":
+
                         LinkIndex++;
-                        if (LinkIndex <= LinkssList.Count)
+                        Helper.UpdateStatus(LinkssSelectedData,true);
+
+                        if (LinkIndex < LinkssList.Count)
                             LinkssSelectedData = LinkssList[LinkIndex];
                         break;
                     case "Bad":
+                        var l = LinkssList.ToList();
+                        l.RemoveAll(x => x.SourceURL.Contains(LinkssSelectedData.SourceURL.Substring(0, 15)));
+                        LinkssList = new ObservableCollection<Links>(l);
                         Helper.UpdateStatus(LinkssSelectedData);
                         PerformAction("Next");
 

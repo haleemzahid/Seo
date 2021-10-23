@@ -16,40 +16,43 @@
         </Grid.RowDefinitions>
         <Grid >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="130"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Select Project" Foreground="Black" VerticalContentAlignment="Center" FontSize="16"/>
-            <ComboBox  ItemsSource="{Binding ProjectList,UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedItem="{Binding ProjectSelectedData,UpdateSourceTrigger=PropertyChanged}" Margin="16 0 0 0" Grid.Column="1"   FontSize="16">
+            <ComboBox SelectedIndex="0" m:HintAssist.Hint="Project" Grid.Column="0" m:HintAssist.IsFloating="True"  ItemsSource="{Binding ProjectList,UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedItem="{Binding ProjectSelectedData,UpdateSourceTrigger=PropertyChanged}" Margin="16 0 0 0"    FontSize="14">
+               
+            </ComboBox>
+            <ComboBox m:HintAssist.Hint="Category" SelectedValuePath="Category" SelectedValue="{Binding FilterData.Category,UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" m:HintAssist.IsFloating="True"  ItemsSource="{Binding FilterList,UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Category" SelectedIndex="0"  Margin="16 0 0 0"    FontSize="14"/>
+            <ComboBox m:HintAssist.Hint="Anchor Text" SelectedValuePath="AnchorText" DisplayMemberPath="AnchorText" SelectedValue="{Binding FilterData.AnchorText,UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" m:HintAssist.IsFloating="True"  ItemsSource="{Binding FilterList,UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0" Margin="16 0 0 0"    FontSize="14">
                
             </ComboBox>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="0*"/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Current Link" Foreground="Black" VerticalContentAlignment="Center" FontSize="16"/>
-            <TextBox Grid.Column="1" Margin="16 0 0 0" Text="{Binding LinkssSelectedData.SourceURL,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" TextWrapping="Wrap" Name="txtUrl"></TextBox>
+            <TextBox Grid.Column="0" m:HintAssist.Hint="Current Link" Margin="16 0 0 0" Text="{Binding LinkssSelectedData.SourceURL,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" TextWrapping="Wrap" Name="txtUrl"></TextBox>
             <Button  x:Name="btn" Command="{Binding command}" CommandParameter="Next" Grid.Column="3">Next</Button>
-            <Button Command="{Binding command}" CommandParameter="Bad" Grid.Column="5">Bad</Button>
+            <Button Command="{Binding command}" BorderBrush="Red" Background="Red" CommandParameter="Bad" Grid.Column="5">Bad</Button>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
-            <cefSharp:ChromiumWebBrowser  Grid.Row="1" Grid.ColumnSpan="2" Margin="0 10 0 10" cefSharp:BorderThickness="1" cefSharp:BorderBrush="Blue"
+            <cefSharp:ChromiumWebBrowser AddressChanged="Changes" Grid.Row="1" Grid.ColumnSpan="2" Margin="0 10 0 10" cefSharp:BorderThickness="1" cefSharp:BorderBrush="Blue"
                                       
              Address="{Binding ElementName=txtUrl, Path=Text}" LoadingStateChanged="LoadStateChanged" >
 

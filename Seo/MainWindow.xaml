@@ -20,7 +20,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid>
+        <Grid Background="White" Mouse.MouseDown="down">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60"/>
                 <ColumnDefinition Width="60"/>

@@ -74,5 +74,10 @@ namespace Seo
             Application.Current.Shutdown();
 
         }
+
+        private void down(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
     }
 }
