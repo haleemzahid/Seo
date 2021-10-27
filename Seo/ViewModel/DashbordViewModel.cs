@@ -24,14 +24,23 @@ namespace Seo.ViewModel
 {
  public   class DashbordViewModel:ViewModelBase
     {
-
-
+        private ObservableCollection<Data> _DataList;
+        public ObservableCollection<Data> DataList
+        {
+            get { return _DataList = _DataList ?? new ObservableCollection<Data>(); }
+            set { _DataList = value; RaisePropertyChanged("DataList"); }
+        }
+        private Data _DataSelectedData;
+        public Data DataSelectedData
+        {
+            get { return _DataSelectedData = _DataSelectedData ?? new Data(); }
+            set { _DataSelectedData = value; RaisePropertyChanged("DataSelectedData"); }
+        }
 
         private Filter _filterData;
-
-        public Filter FilterData
+        public  Filter FilterData
         {
-            get { return _filterData; }
+            get { return _filterData=_filterData??new Filter(); }
             set
             {
                 _filterData = value;
@@ -40,10 +49,9 @@ namespace Seo.ViewModel
             }
         }
         private Filter _filterData2;
-
-        public Filter FilterData2
+        public  Filter FilterData2
         {
-            get { return _filterData2; }
+            get { return _filterData2=_filterData2??new Filter(); }
             set
             {
                 _filterData2 = value;
@@ -51,12 +59,129 @@ namespace Seo.ViewModel
                 RaisePropertyChanged("FilterData2");
             }
         }
+        private ObservableCollection<Filter> _filterList;
+        public  ObservableCollection<Filter> FilterList
+        {
+            get { return _filterList=_filterList??new ObservableCollection<Filter>(); }
+            set { _filterList = value;RaisePropertyChanged("FilterList"); }
+        }
+        private ObservableCollection<Filter> _filterList2;
+        public  ObservableCollection<Filter> FilterList2
+        {
+            get { return _filterList2=_filterList2??new ObservableCollection<Filter>(); }
+            set { _filterList2 = value;RaisePropertyChanged("FilterList2"); }
+        }
+        private Server _server;
+        public  Server server
+        {
+            get { return _server=_server??new Server(); }
+            set { _server = value;RaisePropertyChanged("server"); }
+        }
+        public  RelayCommand<string> command { get; set; }
+        private ObservableCollection<Project> _projectsList;
+        public ObservableCollection<Project> ProjectList
+        {
+            get { return _projectsList = _projectsList ?? new ObservableCollection<Project>(); }
+            set { _projectsList = value; RaisePropertyChanged("ProjectList"); }
+        }
+        private Project _projectsSelectedData;
+        public Project ProjectSelectedData
+        {
+            get { return _projectsSelectedData = _projectsSelectedData ?? new Project(); }
+            set
+            {
+                _projectsSelectedData = value;
+                RefreshData(value);
 
+                value = new Project();
+                RaisePropertyChanged("ProjectSelectedData");
+            }
+        }
+        private SettingDialog _settingDialog;
+        public SettingDialog SettingDialog
+        {
+            get { return _settingDialog = _settingDialog ?? new SettingDialog(); }
+            set { _settingDialog = value; }
+        }
+        private ObservableCollection<Links> _LinkssList;
+        public ObservableCollection<Links> LinkssList
+        {
+            get { return _LinkssList = _LinkssList ?? new ObservableCollection<Links>(); }
+            set { _LinkssList = value; RaisePropertyChanged("LinkssList"); }
+        }
+        private Links _LinkssSelectedData;
+        public Links LinkssSelectedData
+        {
+            get { return _LinkssSelectedData = _LinkssSelectedData ?? new Links(); }
+            set { _LinkssSelectedData = value; RaisePropertyChanged("LinkssSelectedData"); }
+        }
+        private Visibility _controlVisibility = Visibility.Collapsed;
+        public Visibility ControlVisibility
+        {
+            get { return _controlVisibility; }
+            set { _controlVisibility = value; RaisePropertyChanged("ControlVisibility"); }
+        }
+        public int LinkIndex { get; set; } = 0;
+        private Visibility _visibility = Visibility.Collapsed;
+        public Visibility visibility
+        {
+            get { return _visibility; }
+            set
+            {
+                _visibility = value
+
+                      ; RaisePropertyChanged("visibility");
+            }
+        }
+        public Window currentWindow { get; set; }
+        public DashbordViewModel()
+        {
+            command = new RelayCommand<string>(PerformAction);
+            currentWindow = new SqlServerDailog(this);
+            if (!Helper.CheckForConnectionString())
+                currentWindow.ShowDialog();
+            SettingDialog = new SettingDialog();
+
+            ProjectList = Helper.GetTables();
+            if (ProjectList.Count > 0)
+            {
+
+                ProjectSelectedData = ProjectList.First();
+
+            }
+
+        }
+
+
+
+
+
+
+        private void RefreshData(Project value)
+        {
+            if (value != null)
+            {
+
+                if (LinkssList == null)
+                    LinkssList = new ObservableCollection<Links>();
+                if (value.Name != "" && value != null && value.Name != null)
+                {
+                    DataList = new ObservableCollection<Data>(Helper.GetSiteData(ProjectSelectedData.Name));
+                    LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name));
+                    LinkIndex = 0;
+                }
+                if (LinkssList.Count > 0)
+                {
+                    
+                    LinkssSelectedData = LinkssList[0];
+                
+                }
+                    GetFilter();
+            }
+        }
         private void GetFilteredList()
         {
-          
-
-
+           
 
             if (FilterData2.AnchorText == null)
                 FilterData2.AnchorText = "";
@@ -76,61 +201,10 @@ namespace Seo.ViewModel
                 PerformAction("Next");
             }
         }
-
-        private ObservableCollection<Filter> _filterList;
-
-        public ObservableCollection<Filter> FilterList
-        {
-            get { return _filterList; }
-            set { _filterList = value;RaisePropertyChanged("FilterList"); }
-        }
-             private ObservableCollection<Filter> _filterList2;
-
-        public ObservableCollection<Filter> FilterList2
-        {
-            get { return _filterList2; }
-            set { _filterList2 = value;RaisePropertyChanged("FilterList2"); }
-        }
-
-        private Server _server;
-
-        public Server server
-        {
-            get { return _server; }
-            set { _server = value;RaisePropertyChanged("server"); }
-        }
-       
-        public RelayCommand<string> command { get; set; }
-        public DashbordViewModel()
-        {
-            FilterData2 = new Filter();
-            command = new RelayCommand<string>(PerformAction);
-            server = new Server();
-            ProjectSelectedData = new Project();
-            ProjectList = new ObservableCollection<Project>();
-            currentWindow = new SqlServerDailog(this);
-            if (!Helper.CheckForConnectionString())
-                currentWindow.ShowDialog();
-            SettingDialog = new SettingDialog();
-            LinkssList = new ObservableCollection<Links>();
-           
-            LinkssSelectedData = new Links();
-            FilterList = new ObservableCollection<Filter>();
-            FilterList2 = new ObservableCollection<Filter>();
-           
-            FilterData = new Filter();
-            ProjectList = Helper.GetTables();
-            if (ProjectList.Count > 0)
-            {
-                
-                ProjectSelectedData = ProjectList.First();
-
-            }
-
-        }
-
         private void GetFilter()
         {
+            FilterList = new ObservableCollection<Filter>();
+            FilterList2 = new ObservableCollection<Filter>();
             var Catli = LinkssList.Select(x => x.Catogery).Distinct().ToList();
             var Anchorli = LinkssList.Select(x => x.AnchorText ).Distinct().ToList();
             foreach (var item in Catli)
@@ -143,116 +217,42 @@ namespace Seo.ViewModel
             }
                       
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        private ObservableCollection<Project> _projectsList;
-
-        public ObservableCollection<Project> ProjectList
-        {
-            get { return _projectsList; }
-            set { _projectsList = value; RaisePropertyChanged("ProjectList"); }
-        }
-        private Project _projectsSelectedData;
-
-        public Project ProjectSelectedData
-        {
-            get { return _projectsSelectedData; }
-            set
-            {
-                _projectsSelectedData = value;
-                RefreshData(value);
-                if(value==null)
-                value = new Project();
-                RaisePropertyChanged("ProjectSelectedData");
-            }
-        }
-
-        private void RefreshData(Project value)
-        {
-            if (value != null)
-            {
-
-                if (LinkssList == null)
-                    LinkssList = new ObservableCollection<Links>();
-                if (value.Name != "" && value != null && value.Name != null)
-                {
-
-                    LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name));
-                    LinkIndex = 0;
-                }
-                if (LinkssList.Count > 0)
-                {
-                    
-                    LinkssSelectedData = LinkssList[0];
-                
-                }
-                    GetFilter();
-            }
-        }
-
-        private SettingDialog  _settingDialog;
-
-        public SettingDialog SettingDialog
-        {
-            get { return _settingDialog; }
-            set { _settingDialog = value; }
-        }
-
-                private ObservableCollection<Links> _LinkssList;
-
-        public ObservableCollection<Links> LinkssList
-        {
-            get { return _LinkssList; }
-            set { _LinkssList = value;RaisePropertyChanged("LinkssList"); }
-        }
-          private Links _LinkssSelectedData;
-
-        public Links LinkssSelectedData
-        {
-            get { return _LinkssSelectedData; }
-            set { _LinkssSelectedData = value;RaisePropertyChanged("LinkssSelectedData"); }
-        }
-
-        private Visibility _controlVisibility=Visibility.Collapsed;
-
-        public Visibility ControlVisibility
-        {
-            get { return _controlVisibility; }
-            set { _controlVisibility = value; RaisePropertyChanged("ControlVisibility"); }
-        }
-        public int LinkIndex { get; set; } = 0;
-        private Visibility _visibility=Visibility.Collapsed;
-
-        public Visibility visibility
-        {
-            get { return _visibility; }
-            set {
-                _visibility=value
-
-                      ; RaisePropertyChanged("visibility"); }
-        }
-      
-
-        public Window currentWindow { get; set; }
         public void PerformAction(string obj)
         {
             try
             {
                 switch (obj)
                 {
+                    case "TitleCopy":
+                        Clipboard.SetText(DataSelectedData.Title);
+                        break;
+                    case "URLCopy":
+                        Clipboard.SetText(DataSelectedData.URL);
+                        break;
+                    case "DescriptionCopy":
+                        Clipboard.SetText(DataSelectedData.Description);
+                        break;
+                    case "Delete":
+                        Helper.DeleteSiteDate(DataSelectedData);
+                        DataList.Remove(DataSelectedData);
+                        break;
+
+                    case "SiteDataInsert":
+                        DataList.Insert(0,new Data());
+                        break;
+                    case "SiteDataSave":
+                        var data = DataList.Where(x => x.Id == 0).ToList();
+                        foreach (var item in data)
+                        {
+                            item.ProjectName = ProjectSelectedData.Name;
+                            Helper.InsertSiteData(item);
+                            DataList = new ObservableCollection<Data>(Helper.GetSiteData(ProjectSelectedData.Name));
+
+
+                        }
+
+                        break;
+
                     case "FilterSelectionChanged":
                         GetFilteredList();
                         break;

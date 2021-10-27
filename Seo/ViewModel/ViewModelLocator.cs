@@ -63,7 +63,16 @@ namespace Seo.ViewModel
         {
             get
             {
+                try
+                {
+
                 return ServiceLocator.Current.GetInstance<DashbordViewModel>();
+                }
+                catch (Exception ex)
+                {
+                    return ServiceLocator.Current.GetInstance<DashbordViewModel>();
+                }
+
             }
         }
         public SettingViewModel settingViewModel

@@ -50,6 +50,57 @@ namespace Seo.BL
         
           return res;
         }
+        #region Site Data
+        public static bool InsertSiteData(Data l)
+        {
+
+         
+            try
+            {
+
+
+               
+                         l.Description = CheckforNull(l.Description);
+                        l.Title = CheckforNull(l.Title);
+                        l.URL = CheckforNull(l.URL);
+                       
+
+                       string query= ("insert into tblSiteData (URL,Description,Title,ProjectName) values ('"+ l.URL + "','" + l.Description + "','" +  l.Title + "','" +l.ProjectName+ "')");
+                ExecuteQuery(query,GetSqlConnection());
+                
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message.ToString());
+
+                return false;
+            }
+            return true;
+        }
+        public static bool DeleteSiteDate(Data d)
+        {
+            try
+            {
+
+
+
+
+
+
+                string query = "delete from tblSiteData where Id=" + d.Id;
+                ExecuteQuery(query, GetSqlConnection());
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message.ToString());
+
+            }
+            return false;
+        }
+        #endregion
         #region Links
         public static string GetLinkInsertQuery(Links l)
         {
@@ -140,6 +191,41 @@ namespace Seo.BL
             var a = l.SourceURL.Substring(0, 18);
             return "update "+tableName+" set URLStatus='" + l.URLStatus + "' where SourceURL LIKE '%" + l.SourceURL.Substring(0,25)+"%';";
         }
+
+        internal static List<Data> GetSiteData(string name)
+        {
+            List<Data> l = new List<Data>();
+            try
+            {
+
+                string query = "SELECT * FROM tblSiteData where CONVERT(NVARCHAR,ProjectName)='"+name+"'";
+
+                var con = GetSqlConnection();
+                con.Open();
+                using (var command = new SqlCommand(query, con))
+                {
+                    using (SqlDataReader result = command.ExecuteReader())
+                    {
+                        while (result.Read())
+                        {
+
+
+                            l.Add(new Data() { Id = result.GetInt32(0), Title = (result.GetString(1)), Description = result.GetString(2), URL = result.GetString(3), ProjectName = result.GetString(4) });
+
+                        }
+                    }
+                    con.Close();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+            return l;
+
+        }
+
         public static string UpdateFinalURLQuery(Links l, string tableName)
         {
             if (l == null)
@@ -148,7 +234,7 @@ namespace Seo.BL
         }
         #endregion
 
-
+    
         public static SqlConnection GetSqlConnection(bool IsDb = true)
         {
             
@@ -168,7 +254,6 @@ namespace Seo.BL
             return con;
         }
     
-
         public static bool ExecuteQuery(string query, SqlConnection con)
         {
            
@@ -194,7 +279,6 @@ namespace Seo.BL
             return true;
 
         }
-
         public static bool ExecuteQuery(List<string> query,SqlConnection con)
         {
                 string itemsa = "";
@@ -228,7 +312,6 @@ namespace Seo.BL
             return true;
 
         }
-
         public static void CreateDB()
         {
             try { 
@@ -236,6 +319,8 @@ namespace Seo.BL
             string query = "create database MasterDB";
             ExecuteQuery(query,con);
             CreateTable("tblMaster");
+            string tableQuery= "create table tblSiteData (Id INTEGER Identity(1,1) PRIMARY KEY,Title TEXT, Description TEXT,URL TEXT,ProjectName TEXT)";
+                ExecuteQuery(tableQuery,GetSqlConnection());
             }
             catch (Exception ex)
             {
@@ -244,6 +329,9 @@ namespace Seo.BL
             }
 
         }
+
+
+
         public static void CreateTable(string tableName)
         {
             try { 
@@ -344,7 +432,9 @@ namespace Seo.BL
                 List<Links> l = new List<Links>();
             try
             {
+
                 string query = "SELECT * FROM "+dbName+ " where CONVERT(NVARCHAR,URLStatus)!='Bad'";
+                
                 var con = GetSqlConnection();
                 con.Open();
                 using (var command = new SqlCommand(query, con))
@@ -553,7 +643,7 @@ namespace Seo.BL
                         ProjectNames.Add(new Project() { Name = (row[2].ToString()) });
                     }
                     connection.Close();
-                    return new ObservableCollection<Project>(ProjectNames.Where(x => x.Name != "tblMaster").ToList());
+                    return new ObservableCollection<Project>(ProjectNames.Where(x => x.Name != "tblMaster"&&x.Name!="tblSiteData").ToList());
                 }
             }
               

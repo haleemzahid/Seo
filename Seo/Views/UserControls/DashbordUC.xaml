@@ -10,7 +10,7 @@
     xmlns:m="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="1300"
     DataContext="{Binding dashbordViewModel, Source={StaticResource Locator}}"
     mc:Ignorable="d">
     <Grid Margin="20">
@@ -39,9 +39,7 @@
                 FontSize="14"
                 ItemsSource="{Binding ProjectList, UpdateSourceTrigger=PropertyChanged}"
                 SelectedIndex="0"
-                SelectedItem="{Binding ProjectSelectedData, UpdateSourceTrigger=PropertyChanged}">
-              
-            </ComboBox>
+                SelectedItem="{Binding ProjectSelectedData, UpdateSourceTrigger=PropertyChanged}" />
             <ComboBox
                 Grid.Column="2"
                 Margin="16,0,0,0"
@@ -72,7 +70,7 @@
                 SelectedIndex="0"
                 SelectedItem="{Binding FilterData2, UpdateSourceTrigger=PropertyChanged}"
                 SelectedValue="{Binding FilterData.AnchorText, UpdateSourceTrigger=PropertyChanged}"
-                SelectedValuePath="AnchorText" >
+                SelectedValuePath="AnchorText">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding command}" CommandParameter="FilterSelectionChanged" />
@@ -121,7 +119,7 @@
             </Grid.ColumnDefinitions>
             <cefSharp:ChromiumWebBrowser
                 Grid.Row="1"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="1"
                 Margin="0,10,0,10"
                 cefSharp:BorderBrush="Blue"
                 cefSharp:BorderThickness="1"
@@ -138,11 +136,191 @@
                 IsIndeterminate="True"
                 Style="{StaticResource ProgressBarInfoCircle}"
                 Visibility="{Binding ControlVisibility, UpdateSourceTrigger=PropertyChanged}" />
-            <!--<DataGrid Grid.Column="1">
-                <DataGrid.Columns>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-                </DataGrid.Columns>
-            </DataGrid>-->
+                    <Button
+                        Margin="2"
+                        Padding="0"
+                        Background="{Binding ElementName=btn, Path=Background}"
+                        Command="{Binding command, UpdateSourceTrigger=PropertyChanged}"
+                        CommandParameter="SiteDataInsert"
+                        Foreground="White"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                        <m:PackIcon
+                            Width="22"
+                            Height="22"
+                            Kind="Add" />
+                    </Button>
+                    <Button
+                        Grid.Column="1"
+                        Margin="2"
+                        Padding="0"
+                        Background="{Binding ElementName=btn, Path=Background}"
+                        Command="{Binding command, UpdateSourceTrigger=PropertyChanged}"
+                        CommandParameter="SiteDataSave"
+                        Foreground="White"
+                        Style="{StaticResource MaterialDesignRaisedButton}">
+                        <m:PackIcon
+                            Width="22"
+                            Height="22"
+                            Kind="ContentSave" />
+                    </Button>
+
+
+
+                </Grid>
+                <DataGrid
+                    Grid.Row="1"
+                    Margin="0,5,0,0"
+                    AutoGenerateColumns="False"
+                    Background="#f5fbfd"
+                    BorderBrush="#2596be"
+                    BorderThickness="2"
+                    CanUserAddRows="False"
+                    ItemsSource="{Binding DataList, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedItem="{Binding DataSelectedData, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="*" Header="Title">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+
+                                        <TextBox
+                                            Padding="0,0,20,0"
+                                            TabIndex="0"
+                                            Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                                            TextWrapping="Wrap" />
+                                        <Button
+                                            Grid.Row="1"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.command}"
+                                            CommandParameter="TitleCopy"
+                                            Width="18"
+                                            Height="18"
+                                            Margin="0,0,0,5"
+                                            Padding="0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            Background="{Binding ElementName=btn, Path=Background}"
+                                            Foreground="White"
+                                            Style="{StaticResource MaterialDesignFloatingActionButton}">
+                                            <m:PackIcon
+                                                Width="10"
+                                                Height="10"
+                                                Kind="ContentCopy" />
+                                        </Button>
+
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="*" Header="URL">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+
+                                        <TextBox
+                                            TabIndex="1"
+                                            Text="{Binding URL, UpdateSourceTrigger=PropertyChanged}"
+                                            TextWrapping="Wrap" />
+                                        <Button
+                                            Grid.Row="1"
+                                            Width="18"
+                                            Height="18"
+                                             Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.command}"
+                                            CommandParameter="URLCopy"
+                                            Margin="0,0,0,5"
+                                            Padding="0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            Background="{Binding ElementName=btn, Path=Background}"
+                                            Foreground="White"
+                                            Style="{StaticResource MaterialDesignFloatingActionButton}">
+                                            <m:PackIcon
+                                                Width="10"
+                                                Height="10"
+                                                Kind="ContentCopy" />
+                                        </Button>
+
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="*" Header="Description">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+
+                                        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" />
+                                        <Button
+                                            Grid.Row="1"
+                                            Width="18"
+                                             Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.command}"
+                                            CommandParameter="DescriptionCopy"
+                                            Height="18"
+                                            Margin="0,0,0,5"
+                                            Padding="0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            Background="{Binding ElementName=btn, Path=Background}"
+                                            Foreground="White"
+                                            Style="{StaticResource MaterialDesignFloatingActionButton}"
+                                            TabIndex="2">
+                                            <m:PackIcon
+                                                Width="10"
+                                                Height="10"
+                                                Kind="ContentCopy" />
+                                        </Button>
+
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="60">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+
+
+                                    <Button
+                                        Width="25"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext.command}"
+                                        CommandParameter="Delete"
+                                        Height="25"
+                                        Margin="0"
+                                        Padding="0"
+                                        Background="Red"
+                                        Foreground="White"
+                                        Style="{StaticResource MaterialDesignIconButton}">
+                                        <m:PackIcon
+                                            Width="15"
+                                            Height="15"
+                                            Kind="Delete" />
+                                    </Button>
+
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
         </Grid>
 
     </Grid>

@@ -146,6 +146,7 @@
     </ApplicationDefinition>
     <Compile Include="BL\Filter.cs" />
     <Compile Include="BL\Helper.cs" />
+    <Compile Include="Model\Data.cs" />
     <Compile Include="Model\Links.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\Server.cs" />
