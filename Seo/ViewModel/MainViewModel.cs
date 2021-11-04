@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using CefSharp.WinForms;
 using Seo.BL;
 using Seo.Views.Dialogs;
 using Seo.Views.UserControls;
@@ -63,7 +64,7 @@ namespace Seo.ViewModel
                     if(path!=null&& path != "")
                     {
 
-                    var list = Helper.GetListOfLinksFromCSVFile(path);
+                    var list = Helper.ReadExcelFile(path);
 
                     var queries = Helper.GetLinkInsertQuery(list,"tblMaster");
                     Helper.ExecuteQuery(queries,Helper.GetSqlConnection());

@@ -427,14 +427,23 @@ namespace Seo.BL
 
    
 
-        public static List<Links> GetLinksFromDB(string dbName)
+      
+        public static List<Links> GetLinksFromDB(string dbName,string Category="",string AnchorText="")
         {
-                List<Links> l = new List<Links>();
+            List<Links> l = new List<Links>();
             try
             {
 
-                string query = "SELECT * FROM "+dbName+ " where CONVERT(NVARCHAR,URLStatus)!='Bad'";
-                
+                string query = "";
+                if(Category==""&&AnchorText=="")
+                query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad'";
+              else  if (Category != "" && AnchorText == "")
+                    query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad' AND CONVERT(NVARCHAR,AnchorText)=='"+AnchorText+"'";
+                else if (Category == "" && AnchorText != "")
+                    query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad' AND CONVERT(NVARCHAR,Category)=='" + Category + "'";
+                else if (Category != "" && AnchorText != "")
+                    query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad' AND CONVERT(NVARCHAR,Category)=='" + Category + "' AND CONVERT(NVARCHAR,AnchorText)=='" + Category + "'";
+
                 var con = GetSqlConnection();
                 con.Open();
                 using (var command = new SqlCommand(query, con))
@@ -445,7 +454,7 @@ namespace Seo.BL
                         {
 
 
-                            l.Add(new Links() { Id = result.GetInt32(0),Guidstr= (result.GetString(1)), SourceTitle = result.GetString(2), AnchorURL = result.GetString(3), AnchorText = result.GetString(4), SourceURL = result.GetString(5), URLStatus = result.GetString(6), Catogery = result.GetString(8), FinalURL = result.GetString(7) });
+                            l.Add(new Links() { Id = result.GetInt32(0), Guidstr = (result.GetString(1)), SourceTitle = result.GetString(2), AnchorURL = result.GetString(3), AnchorText = result.GetString(4), SourceURL = result.GetString(5), URLStatus = result.GetString(6), Catogery = result.GetString(8), FinalURL = result.GetString(7) });
 
                         }
                     }
@@ -457,7 +466,7 @@ namespace Seo.BL
             {
                 MessageBox.Show(ex.Message.ToString());
             }
-                    return l;
+            return l;
 
         }
         public static List<Project> projects = new List<Project>();
@@ -478,121 +487,77 @@ namespace Seo.BL
         }
 
 
-        public static List<Links> ReadCSV(string fileName)
+        public static List<Links> ReadExcel(string fileName)
         {
 
 
             List<Links> listB = new List<Links>();
-            using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
+            try
             {
-                string catName = "";
-                int a = 0;
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                using (var stream = File.Open(fileName, FileMode.Open, FileAccess.Read))
                 {
-                    if (reader.RowCount > 0)
+                    string catName = "";
+                    int a = 0;
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
                     {
-                        var dashv = CommonServiceLocator.ServiceLocator.Current.GetInstance<SettingViewModel>();
-                        CreateNewProject c = new CreateNewProject(dashv);
-                        catName = dashv.ProjectSelectedData.Name="";
-                        dashv.win = new Window();
-                        dashv.win = c;
-                      c.btnSave.CommandParameter = "Close";
-                        dashv.HintText = "Enter category name";
-                        c.ShowDialog();
-                        catName = dashv.ProjectSelectedData.Name;
-                        dashv.HintText = "Enter project name";
-                        if (catName == "")
-                            catName = "Default";
-                        
-
-
-                     
-                    }
-                    while (reader.Read())
-                    {
-                        if (a != 0)
-                            
-                       
+                        if (reader.RowCount > 0)
                         {
+                            var dashv = CommonServiceLocator.ServiceLocator.Current.GetInstance<SettingViewModel>();
+                            CreateNewProject c = new CreateNewProject(dashv);
+                            catName = dashv.ProjectSelectedData.Name = "";
+                            dashv.win = new Window();
+                            dashv.win = c;
+                            c.btnSave.CommandParameter = "Close";
+                            dashv.HintText = "Enter category name";
+                            c.ShowDialog();
+                            catName = dashv.ProjectSelectedData.Name;
+                            dashv.HintText = "Enter project name";
+                            if (catName == "")
+                                catName = "Default";
 
 
 
-                        var l = new Links();
-                        if(!reader.IsDBNull(3))
-                        l.AnchorText = reader[3].ToString();
-                        if(!reader.IsDBNull(2))
-                        l.AnchorURL = reader[2].ToString();
-                        if(!reader.IsDBNull(0))
-                        l.SourceURL = reader[0].ToString();
-                        if(!reader.IsDBNull(1))
-                        l.SourceTitle = reader[1].ToString();
-                            l.Catogery = catName;
-                        listB.Add(l);
+
                         }
-                        a++;
+                        while (reader.Read())
+                        {
+                            if (a != 0)
 
+
+                            {
+
+
+
+                                var l = new Links();
+                                if (!reader.IsDBNull(3))
+                                    l.AnchorText = reader[3].ToString();
+                                if (!reader.IsDBNull(2))
+                                    l.AnchorURL = reader[2].ToString();
+                                if (!reader.IsDBNull(0))
+                                    l.SourceURL = reader[0].ToString();
+                                if (!reader.IsDBNull(1))
+                                    l.SourceTitle = reader[1].ToString();
+                                l.Catogery = catName;
+                                listB.Add(l);
+                            }
+                            a++;
+
+                        }
                     }
                 }
             }
-            //try
-            //{
-            //    using (var reader = new StreamReader(fileName))
-            //    {
-            //        int a = 0;
-            //        while (!reader.EndOfStream)
-            //        {
-            //            if (a != 0)
-            //            {
-
-            //                var line = reader.ReadLine();
-            //                var values = line.Split(',');
-            //                var l = new Links();
-            //                l.AnchorText = values[3];
-            //                l.AnchorURL = values[2];
-            //                l.SourceURL = values[0];
-            //                l.SourceTitle = values[1];
-            //                listB.Add(l);
-            //            }
-            //            else
-            //            {
-
-            //                a++;
-            //            }
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message.ToString());
-            //}
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
             return listB;
 
         }
-        public static List<Links> GetListOfLinksFromCSVFile(string fileName)
+        public static List<Links> ReadExcelFile(string fileName)
         {
-            return ReadCSV(fileName);
+            return ReadExcel(fileName);
 
-            //foreach (var item in list)
-            //{
-
-            //}
-            //List<Links> l = new List<Links>();
-            //try { 
-            //CsvConfiguration csvcon = new CsvConfiguration(CultureInfo.CurrentCulture);
-            //using (var reader = new StreamReader(fileName))
-            //using (CsvReader csv = new CsvReader(reader, csvcon))
-            //{
-            //    int a = 0;
-            //    while (csv.Read())
-            //    {
-            //        if (a != 0)
-            //            l.Add(new Links() { SourceTitle = csv.GetField(1), AnchorURL = csv.GetField(2), AnchorText = csv.GetField(3), SourceURL = csv.GetField(0) });
-            //        a = 1;
-
-            //        //var s = Date.Now;csv[4]
-            //        //var a =csv.GetRecords<Prayer>();
-            //    }
-
+          
 
          
         }

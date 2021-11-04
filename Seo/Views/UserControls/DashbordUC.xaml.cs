@@ -1,4 +1,6 @@
 ﻿using Seo.ViewModel;
+using CefSharp.WinForms;
+using CefSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,30 +26,68 @@ namespace Seo.Views.UserControls
         public DashbordUC()
         {
             InitializeComponent();
+
         }
 
         private void LoadStateChanged(object sender, CefSharp.LoadingStateChangedEventArgs e)
         {
 
+         
+        }
+
+        private void AddressChanged(object sender, CefSharp.AddressChangedEventArgs e)
+        {
+
+        }
+
+        private void Changed(object sender, TextChangedEventArgs e)
+        {
+            LoadUrl((sender as TextBox).Text);
+        }
+
+
+
+
+        //private void Changed(object sender, TextChangedEventArgs e)
+        //{
+        //    Browser.Load((sender as TextBox).Text);
+        //}
+
+        //private void Changes(object sender, CefSharp.AddressChangedEventArgs e)
+        //{
+        //    CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().LinkssSelectedData.SourceURL = e.NewValue.ToString();
+
+
+        //    txtUrl.Text = e.NewValue.ToString();
+
+        //}
+
+        private void LoadUrl(string url)
+        {
+            if (Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+            {
+                var a = wfhSample.Child;
+
+                (a as ChromiumWebBrowser).Load(url);
+            }
+        }
+
+        private void LoadStateIsChanged(object sender, LoadingStateChangedEventArgs e)
+        {
+            
             if (!e.IsLoading)
             {
                 CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().ControlVisibility = Visibility.Collapsed;
             }
             else
             {
+
                 CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().ControlVisibility = Visibility.Visible;
+                CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().RaisePropertyChanged("ControlVisibility"); 
                 //IsLoading = true;
 
 
             }
-        }
-
-        private void Changes(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().LinkssSelectedData.SourceURL = e.NewValue.ToString();
-
-
-            txtUrl.Text= e.NewValue.ToString();
         }
     }
 }

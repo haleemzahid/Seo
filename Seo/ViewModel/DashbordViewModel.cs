@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using CefSharp;
+using CefSharp.WinForms;
 using CsvHelper;
 using CsvHelper.Configuration;
 using GalaSoft.MvvmLight;
@@ -24,6 +26,15 @@ namespace Seo.ViewModel
 {
  public   class DashbordViewModel:ViewModelBase
     {
+        private ChromiumWebBrowser _cefBrowser;
+
+        public ChromiumWebBrowser CefBrowser
+        {
+            get { return _cefBrowser ; }
+            set { _cefBrowser = value; }
+        }
+
+
         private ObservableCollection<Data> _DataList;
         public ObservableCollection<Data> DataList
         {
@@ -121,6 +132,12 @@ namespace Seo.ViewModel
             get { return _controlVisibility; }
             set { _controlVisibility = value; RaisePropertyChanged("ControlVisibility"); }
         }
+        private Visibility _controlVisibility2 = Visibility.Visible;
+        public Visibility ControlVisibility2
+        {
+            get { return _controlVisibility2; }
+            set { _controlVisibility2 = value; RaisePropertyChanged("ControlVisibility2"); }
+        }
         public int LinkIndex { get; set; } = 0;
         private Visibility _visibility = Visibility.Collapsed;
         public Visibility visibility
@@ -134,6 +151,16 @@ namespace Seo.ViewModel
             }
         }
         public Window currentWindow { get; set; }
+
+        private string _SourceURL;
+
+        public string SourceURL
+        {
+            get { return _SourceURL; }
+            set { _SourceURL = value; RaisePropertyChanged("SourceURL"); }
+        }
+
+
         public DashbordViewModel()
         {
             command = new RelayCommand<string>(PerformAction);
@@ -147,15 +174,57 @@ namespace Seo.ViewModel
             {
 
                 ProjectSelectedData = ProjectList.First();
+                LinkIndex = -1;
+                PerformAction("Next");
 
             }
+         
 
+            //CefBrowser.ShowDevTools();
+        }
+        private void LoadUrl(string url)
+        {
+            if (Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+            {
+                CefBrowser.Load(url);
+            }
+        }
+
+        private void ShowDevToolsMenuItemClick(object sender, EventArgs e)
+        {
+            CefBrowser.ShowDevTools();
         }
 
 
+        private void OnBrowserAddressChanged(object sender, AddressChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
+        private void OnBrowserTitleChanged(object sender, TitleChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
+        private void OnBrowserStatusMessage(object sender, StatusMessageEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
+        private void OnBrowserConsoleMessage(object sender, ConsoleMessageEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnIsBrowserInitializedChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         private void RefreshData(Project value)
         {
@@ -187,17 +256,20 @@ namespace Seo.ViewModel
                 FilterData2.AnchorText = "";
             if (FilterData.Category == null)
                 FilterData.Category = "";
-            if(FilterData.AnchorText==""&&FilterData.Category!="")
-            LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name).Where(x=>x.Catogery == FilterData.Category).ToList());
-           else if(FilterData2.AnchorText!=""&&FilterData.Category=="")
-            LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name).Where(x=>x.AnchorText== FilterData.AnchorText).ToList());
-           else if(FilterData2.AnchorText!=""&&FilterData.Category!="")
-            LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name).Where(x => x.AnchorText == FilterData.AnchorText && x.Catogery == FilterData.Category).ToList());
+            if (FilterData2.AnchorText == "" && FilterData.Category != "")
+                LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name,Category:FilterData.Category));
+            else if (FilterData2.AnchorText == "" && FilterData.Category == "")
+                LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name));
+            else if (FilterData2.AnchorText != "" && FilterData.Category == "")
+                LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name,AnchorText: FilterData2.AnchorText));
+            else if (FilterData2.AnchorText != "" && FilterData.Category != "")
+                LinkssList = new ObservableCollection<Links>(Helper.GetLinksFromDB(ProjectSelectedData.Name,FilterData.Category,FilterData2.AnchorText));
             if (LinkssList.Count <= 0)
                 LinkssSelectedData = new Links();
             else
             {
-                LinkIndex = 0;
+                LinkIndex = -1;
+
                 PerformAction("Next");
             }
         }
@@ -215,7 +287,15 @@ namespace Seo.ViewModel
             {
                 FilterList2.Add(new Filter() {AnchorText=item});
             }
-                      
+            if (FilterList.Count>0)
+            {
+                FilterData = FilterList[0];
+            }
+            if (FilterList2.Count > 0)
+            {
+                FilterData2 = FilterList[0];
+            }
+
         }
         public void PerformAction(string obj)
         {
@@ -274,6 +354,7 @@ namespace Seo.ViewModel
 
                         if (LinkIndex < LinkssList.Count)
                             LinkssSelectedData = LinkssList[LinkIndex];
+                        SourceURL = LinkssSelectedData.SourceURL;
                         break;
                     case "Bad":
                         var l = LinkssList.ToList();
