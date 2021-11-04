@@ -354,6 +354,10 @@ namespace Seo.ViewModel
 
                         if (LinkIndex < LinkssList.Count)
                             LinkssSelectedData = LinkssList[LinkIndex];
+                        else
+                        {
+                            MessageBox.Show("Reached to the end!");
+                        }
                         SourceURL = LinkssSelectedData.SourceURL;
                         break;
                     case "Bad":

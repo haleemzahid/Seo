@@ -438,11 +438,11 @@ namespace Seo.BL
                 if(Category==""&&AnchorText=="")
                 query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad'";
               else  if (Category != "" && AnchorText == "")
-                    query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad' AND CONVERT(NVARCHAR,AnchorText)=='"+AnchorText+"'";
+                    query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad' AND CONVERT(NVARCHAR,AnchorText)='"+AnchorText+"'";
                 else if (Category == "" && AnchorText != "")
-                    query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad' AND CONVERT(NVARCHAR,Category)=='" + Category + "'";
+                    query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad' AND CONVERT(NVARCHAR,Category)='" + Category + "'";
                 else if (Category != "" && AnchorText != "")
-                    query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad' AND CONVERT(NVARCHAR,Category)=='" + Category + "' AND CONVERT(NVARCHAR,AnchorText)=='" + Category + "'";
+                    query = "SELECT * FROM " + dbName + " where CONVERT(NVARCHAR,URLStatus)!='Bad' AND CONVERT(NVARCHAR,Category)='" + Category + "' AND CONVERT(NVARCHAR,AnchorText)='" + AnchorText + "'";
 
                 var con = GetSqlConnection();
                 con.Open();
