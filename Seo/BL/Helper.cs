@@ -1,6 +1,4 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using ExcelDataReader;
+﻿using ExcelDataReader;
 using Microsoft.Win32;
 using Seo.Model;
 using Seo.ViewModel;

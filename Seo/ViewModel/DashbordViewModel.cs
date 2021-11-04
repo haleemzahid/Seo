@@ -12,8 +12,6 @@ using System.Windows;
 using System.Windows.Controls;
 using CefSharp;
 using CefSharp.WinForms;
-using CsvHelper;
-using CsvHelper.Configuration;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Seo.BL;
@@ -354,8 +352,9 @@ namespace Seo.ViewModel
 
                         if (LinkIndex < LinkssList.Count)
                             LinkssSelectedData = LinkssList[LinkIndex];
-                        else
+                        else 
                         {
+                            if(LinkssList.Count>0)
                             MessageBox.Show("Reached to the end!");
                         }
                         SourceURL = LinkssSelectedData.SourceURL;
