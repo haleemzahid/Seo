@@ -27,6 +27,7 @@ namespace Seo.Views
 
         private void Close(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
             Application.Current.Shutdown();
             
         }
