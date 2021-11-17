@@ -1,4 +1,5 @@
-﻿using Seo.ViewModel;
+﻿using BlockingCollection;
+using Seo.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Seo
         public MainWindow()
         {
             InitializeComponent();
-
+            DataManager.Start();
            
             
 

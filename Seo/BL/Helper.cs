@@ -330,25 +330,21 @@ namespace Seo.BL
 
 
 
-        public static void CreateTable(string tableName)
+        public static bool CreateTable(string tableName)
         {
             try { 
            var con = GetSqlConnection();
             string tableQuery = "Create table "+tableName+ " (Id INTEGER Identity(1,1) PRIMARY KEY,Guid TEXT, SourceTitle TEXT,AnchorURL TEXT,AnchorText TEXT,SourceURL TEXT,URLStatus NVARCHAR(50),FinalURL TEXT,Category NVARCHAR(50))";
 
-            if(ExecuteQuery(tableQuery, con))
-                {
-                    if(tableName!="tblMaster")
-                        
-                        CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().ProjectList.Add(new Project() { Name=tableName});
-                        CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().RaisePropertyChanged("ProjectList");
-                }
+             return   ExecuteQuery(tableQuery, con);
+               
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString());
 
             }
+            return false;
         }
         public static string conStr = "";
         internal static string GetConnectionString(bool IsDB = true)
@@ -560,38 +556,7 @@ namespace Seo.BL
          
         }
 
-        public  static void UpdateStatus(Links l,bool IsFinalUrl=false)
-        {
-            try {
-                l.URLStatus = "Bad";
-            var tables = GetTables();
-                tables.Add(new Project() { Name="tblMaster"});
-            foreach (var item in tables)
-            {
-                    string query = "";
-                var con= GetSqlConnection();
-                    if(!IsFinalUrl)
-                    {
-
-                query = GetLinkupdateQuery(l,item.Name);
-                    }
-                    else
-                    {
-                query = UpdateFinalURLQuery(l,item.Name);
-
-                    }
-                ExecuteQuery(query,con);
-
-
-
-            }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-
-            }
-        }
+     
         public static ObservableCollection<Project> GetTables()
         {
             try
@@ -623,11 +588,19 @@ namespace Seo.BL
             try
             {
                 name = name.Replace(" ","_");
-                CreateTable(name);
+              var res=  CreateTable(name);
                 var dateFromMaster = GetLinksFromDB("tblMaster");
                 var quiries = GetLinkInsertQuery(dateFromMaster, name);
                 var con = GetSqlConnection();
                 ExecuteQuery(quiries, con);
+                if (res)
+                {
+                    if (name != "tblMaster")
+
+                        CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().ProjectList.Add(new Project() { Name = name });
+                    CommonServiceLocator.ServiceLocator.Current.GetInstance<DashbordViewModel>().RaisePropertyChanged("ProjectList");
+                }
+            
                 RefreshData();
             }
             catch (Exception ex)

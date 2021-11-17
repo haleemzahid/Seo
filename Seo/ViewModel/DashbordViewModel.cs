@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using BlockingCollection;
 using CefSharp;
 using CefSharp.WinForms;
 using GalaSoft.MvvmLight;
@@ -102,7 +103,7 @@ namespace Seo.ViewModel
                 _projectsSelectedData = value;
                 RefreshData(value);
 
-                value = new Project();
+                //value = new Project();
                 RaisePropertyChanged("ProjectSelectedData");
             }
         }
@@ -348,22 +349,24 @@ namespace Seo.ViewModel
                     case "Next":
 
                         LinkIndex++;
-                        Helper.UpdateStatus(LinkssSelectedData,true);
+                        DataManager.UpdateStatus(LinkssSelectedData,true);
 
                         if (LinkIndex < LinkssList.Count)
                             LinkssSelectedData = LinkssList[LinkIndex];
                         else 
                         {
-                            if(LinkssList.Count>0)
+                          
                             MessageBox.Show("Reached to the end!");
                         }
                         SourceURL = LinkssSelectedData.SourceURL;
                         break;
                     case "Bad":
+                        if (LinkssList.Count <= 0)
+                            return;
                         var l = LinkssList.ToList();
                         l.RemoveAll(x => x.SourceURL.Contains(LinkssSelectedData.SourceURL.Substring(0, 15)));
                         LinkssList = new ObservableCollection<Links>(l);
-                        Helper.UpdateStatus(LinkssSelectedData);
+                        DataManager.UpdateStatus(LinkssSelectedData);
                         PerformAction("Next");
 
                         break;
@@ -375,7 +378,7 @@ namespace Seo.ViewModel
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString());
+            //    MessageBox.Show(ex.Message.ToString());
             }
         }
         public  bool authenticate()
@@ -408,7 +411,7 @@ namespace Seo.ViewModel
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString());
+             //   MessageBox.Show(ex.Message.ToString());
             }
             return true;
         }

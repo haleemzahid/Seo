@@ -64,6 +64,8 @@ namespace Seo.Views.UserControls
 
         private void LoadUrl(string url)
         {
+            if (wfhSample == null) return;
+
             if (Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
             {
                 var a = wfhSample.Child;

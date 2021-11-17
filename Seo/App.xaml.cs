@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlockingCollection;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,10 @@ namespace Seo
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+           // DataManager.Start();
+
+        }
     }
 }
