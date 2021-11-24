@@ -18,5 +18,6 @@ namespace Seo.Model
         public string Catogery { get; set; }
         public Guid Guid { get; set; } = Guid.NewGuid();
         public string Guidstr { get; set; } 
+        public DateTime Date { get; set; } 
     }
 }

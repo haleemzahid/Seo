@@ -228,7 +228,7 @@ namespace Seo.BL
         {
             if (l == null)
                 l = new Links();
-            return "update " + tableName + " set FinalURL='" + l.SourceURL + "' where CONVERT(NVARCHAR(MAX), Guid)='" + l.Guidstr + "';";
+            return "update " + tableName + " set FinalURL='" + l.SourceURL + "' , Date='"+DateTime.Now+"' where CONVERT(NVARCHAR(MAX), Guid)='" + l.Guidstr + "';";
         }
         #endregion
 
@@ -334,7 +334,7 @@ namespace Seo.BL
         {
             try { 
            var con = GetSqlConnection();
-            string tableQuery = "Create table "+tableName+ " (Id INTEGER Identity(1,1) PRIMARY KEY,Guid TEXT, SourceTitle TEXT,AnchorURL TEXT,AnchorText TEXT,SourceURL TEXT,URLStatus NVARCHAR(50),FinalURL TEXT,Category NVARCHAR(50))";
+            string tableQuery = "Create table "+tableName+ " (Id INTEGER Identity(1,1) PRIMARY KEY,Guid TEXT, SourceTitle TEXT,AnchorURL TEXT,AnchorText TEXT,SourceURL TEXT,URLStatus NVARCHAR(50),FinalURL TEXT,Category NVARCHAR(50),Date DATETIME)";
 
              return   ExecuteQuery(tableQuery, con);
                
